@@ -1,0 +1,24 @@
+What it does:
+
+This project is designed to solve the producer-consumer problem using two processes that share memory. The producer generates items,
+then puts them on the table in shared memory. This table can hold no more than 2 items at the same time. The producer waits when
+the table is full. The consumer takes items off of the table, but only if there are items on the table. If the table is empty,
+the consumer waits for the producer to put an item on the table, at which point consumption activity resumes.
+
+How it uses...
+
+Semaphores: This project uses three semaphores that are defined in the header file. The 'empty' semaphore tracks whether the table
+is empty or not. The 'full' semaphore tracks whether the table is full or not. The 'mutex' semaphore tracks whether a process is
+currently accessing the table's contents in shared memory.
+
+Mutual exclusion: Semaphores are used to ensure that only one process is accessing the table in shared memory at any given time.
+This is done to ensure that processes reliably know the contents of the table while accessing the table. When a process accesses
+the table, it changes the 'mutex' semaphore's value from '1' to '0', so that the other process knows not to try accessing the table
+simultaneously. When a process finishes its interaction with the table, the value of 'mutex' is set back to '1', at which point the
+other process will see that the table is not in use and take its turn to access it.
+
+Shared memory: The producer creates a shared memory and opens it. After waiting momentarily for the producer to do this, the consumer
+opens the shared memory. Both producer and consumer retain access to the shared memory from this point on until the processes are
+terminated. The producer checks to make sure the table is not full, and if it is not, it generates an item and gives it to the table.
+The consumer checks to make sure the table is not empty, and if it is not, it takes an item off of the table. In this way, the shared
+memory serves as the intermediary through which items are passed from producer to consumer.
